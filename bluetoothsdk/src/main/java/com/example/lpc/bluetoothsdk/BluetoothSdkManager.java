@@ -31,7 +31,6 @@ public class BluetoothSdkManager {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
-
     /**
      * 判断设备是否支持蓝牙
      * */
