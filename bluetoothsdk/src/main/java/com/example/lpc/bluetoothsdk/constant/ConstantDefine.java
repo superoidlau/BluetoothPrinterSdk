@@ -20,17 +20,15 @@ public class ConstantDefine {
     public static final int MESSAGE_STATE_READ = 1;
     public static final int MESSAGE_STATE_WRITE = 2;
     public static final int MESSAGE_STATE_CHANGE = 3;
+    public static final int MESSAGE_DEVICE_INFO = 4;
 
     //Intent请求码
     public static final int REQUEST_CONNECT_BT = 0x111;     //请求连接蓝牙
     public static final int REQUEST_ENABLED_BT = 0x222;     //请求开启蓝牙
 
-    public static final boolean DEVICE_ANDROID = true;
-    public static final boolean DEVICE_BT_PRINTER = false;
-
     //需要的UUID
-    public static final String STRING_DEVICE_ANDROID = "FA87C0D0-AFAC-11DE-8A39-0800200C9A66";
     public static final String STRING_DEVICE_PRINTER = "00001101-0000-1000-8000-00805F9B34FB";
 
-
+    public static final String KEY_DEVICE_NAME = "device_name";
+    public static final String KEY_DEVICE_ADDRESS = "device_address";
 }
