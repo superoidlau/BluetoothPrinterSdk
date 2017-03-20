@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BluetoothPrinterSdk</string>
+
+
+
+    <string name="btn_text_search_device">search bluetooth devices</string>
+    <string name="btn_text_test_print">print inform test</string>
 </resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/someBtn">
+
+    </ListView>
+
+
+    <LinearLayout
+        android:id="@+id/someBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_text_search_device"
+            android:textAllCaps="false"
+            android:layout_above="@+id/printTest"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_orange_light"/>
+
+        <Button
+            android:id="@+id/printTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/btn_text_test_print"
+            android:textAllCaps="false"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_green_light"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

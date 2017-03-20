@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface DiscoveryDevicesListener {
 
-    void startDisconvery();
+    void startDiscovery();
 
     void discoveryNew(BluetoothDevice device);
 

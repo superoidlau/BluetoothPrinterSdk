@@ -2,17 +2,22 @@ package com.example.lpc.bluetoothsdk;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
 
 import com.example.lpc.bluetoothsdk.listener.BluetoothConnectListener;
 import com.example.lpc.bluetoothsdk.listener.BluetoothStateListener;
+import com.example.lpc.bluetoothsdk.listener.DiscoveryDevicesListener;
 import com.example.lpc.bluetoothsdk.listener.IReceiveDataListener;
 import com.example.lpc.bluetoothsdk.service.BluetoothService;
 import com.example.lpc.bluetoothsdk.constant.ConstantDefine;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -31,11 +36,16 @@ public class BluetoothSdkManager {
     private BluetoothConnectListener mConnectListener = null;
     private BluetoothStateListener mStateListener = null;
     private IReceiveDataListener mReceiveDataListener = null;
+    private DiscoveryDevicesListener mDiscoveryDevicesListener = null;
 
     private BluetoothService mBTService;
     private boolean isConnected = false;
     private boolean isConnecting = false;
     private boolean isServiceRunning = false;
+
+    private List<BluetoothDevice> mDeviceList = null;
+    private DiscoveryReceiver mReceiver;
+    private boolean isRegister = false;
 
     public BluetoothSdkManager(Context context){
         this.mContext = context;
@@ -109,6 +119,12 @@ public class BluetoothSdkManager {
             mBTService.stop();
             isServiceRunning = false;
         }
+        if (isRegister){
+            mContext.unregisterReceiver(mReceiver);
+            isRegister = false;
+        }
+
+        mDeviceList = null;
     }
 
     //连接蓝牙设备
@@ -168,6 +184,50 @@ public class BluetoothSdkManager {
         this.mConnectListener = listener;
     }
 
+    public void setDiscoveryDeviceListener(DiscoveryDevicesListener listener){
+        this.mDiscoveryDevicesListener = listener;
+
+        mDeviceList = new ArrayList<>();
+        if (mReceiver == null){
+            mReceiver = new DiscoveryReceiver();
+        }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        mContext.registerReceiver(mReceiver, intentFilter);
+
+        if (isDiscoverying()){
+            cancelDiscovery();
+        }
+        startDiscovery();
+
+        if (mDiscoveryDevicesListener != null){
+            mDiscoveryDevicesListener.startDiscovery();
+        }
+
+        isRegister = true;
+    }
+
+    //发现蓝牙设备广播
+    public class DiscoveryReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothDevice.ACTION_FOUND.equals(action)){
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                if (mDiscoveryDevicesListener != null){
+                    mDiscoveryDevicesListener.discoveryNew(device);
+                }
+                mDeviceList.add(device);
+            }else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
+                if (mDiscoveryDevicesListener != null){
+                    mDiscoveryDevicesListener.discoveryFinish(mDeviceList);
+                }
+            }
+        }
+    }
 
     private final Handler mHandler = new Handler(){
         @Override
@@ -175,10 +235,10 @@ public class BluetoothSdkManager {
             switch (msg.what){
                 //读取数据
                 case ConstantDefine.MESSAGE_STATE_READ:
-                    byte[] datas = (byte[]) msg.obj;
-                    if (datas != null && datas.length > 0){
+                    byte[] data = (byte[]) msg.obj;
+                    if (data != null && data.length > 0){
                         if (mReceiveDataListener != null){
-                            mReceiveDataListener.onReceiveData(datas);
+                            mReceiveDataListener.onReceiveData(data);
                         }
                     }
                     break;
@@ -213,6 +273,8 @@ public class BluetoothSdkManager {
                         }
                         isConnecting = false;
                     }
+                    break;
+                default:
                     break;
             }
         }
