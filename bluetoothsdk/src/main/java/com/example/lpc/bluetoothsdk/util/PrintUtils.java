@@ -27,6 +27,4 @@ public class PrintUtils {
     //解除粗体模式
     public static final byte[] PRINT_REMOVE_BOLD = {0x1B,0x45,0x00};
 
-
-
 }

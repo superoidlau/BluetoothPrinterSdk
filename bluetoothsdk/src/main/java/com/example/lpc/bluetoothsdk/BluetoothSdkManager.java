@@ -6,8 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.example.lpc.bluetoothsdk.listener.BluetoothConnectListener;
 import com.example.lpc.bluetoothsdk.listener.BluetoothStateListener;
@@ -15,7 +17,9 @@ import com.example.lpc.bluetoothsdk.listener.DiscoveryDevicesListener;
 import com.example.lpc.bluetoothsdk.listener.IReceiveDataListener;
 import com.example.lpc.bluetoothsdk.service.BluetoothService;
 import com.example.lpc.bluetoothsdk.constant.ConstantDefine;
+import com.example.lpc.bluetoothsdk.util.BitmapUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -95,6 +99,10 @@ public class BluetoothSdkManager {
 
     public void setupService() {
         mBTService = new BluetoothService(mHandler);
+        if (mBTService.getState() == ConstantDefine.CONNECT_STATE_NONE){
+            mBTService.start();
+            isServiceRunning = true;
+        }
     }
 
     public int getServiceState(){
@@ -102,15 +110,6 @@ public class BluetoothSdkManager {
             return mBTService.getState();
         }else {
             return -1;
-        }
-    }
-
-    public void startService(){
-        if (mBTService != null){
-            if (mBTService.getState() == ConstantDefine.CONNECT_STATE_NONE){
-                mBTService.start();
-                isServiceRunning = true;
-            }
         }
     }
 
@@ -125,6 +124,10 @@ public class BluetoothSdkManager {
         }
 
         mDeviceList = null;
+    }
+
+    public boolean isServiceRunning(){
+        return isServiceRunning;
     }
 
     //连接蓝牙设备
@@ -153,6 +156,7 @@ public class BluetoothSdkManager {
         }
     }
 
+    //写入数据
     public void write(byte[] data){
         if (mBTService.getState() == ConstantDefine.CONNECT_STATE_CONNECTED){
             mBTService.write(data);
@@ -279,5 +283,31 @@ public class BluetoothSdkManager {
             }
         }
     };
+
+    //************* 打印相关 ****************//
+    //打印文本
+    public void printText(String content){
+        if (content.length() > 0){
+            byte[] send;
+            try{
+                send = content.getBytes("GB2312");
+            }catch (UnsupportedEncodingException ex){
+                send = content.getBytes();
+            }
+            write(send);
+        }
+    }
+
+    public void setLF(){
+        write("\n".getBytes());
+    }
+
+    //打印图片
+    public void printImage(Bitmap bitmap){
+        byte[] data = BitmapUtils.bitmapToByte(bitmap, bitmap.getWidth(), 0);
+        Log.i("lpc", "--> printImage() -- data.length = " + data.length);
+        write(data);
+    }
+
 
 }
