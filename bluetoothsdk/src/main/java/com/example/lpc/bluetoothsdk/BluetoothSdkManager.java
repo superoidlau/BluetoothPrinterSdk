@@ -198,10 +198,9 @@ public class BluetoothSdkManager {
             mReceiver = new DiscoveryReceiver();
         }
 
-        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        mContext.registerReceiver(mReceiver, intentFilter);
-
-        intentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         mContext.registerReceiver(mReceiver, intentFilter);
         isRegister = true;
         mDeviceList.clear();
