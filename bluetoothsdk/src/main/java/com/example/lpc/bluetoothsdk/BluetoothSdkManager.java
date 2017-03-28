@@ -84,6 +84,8 @@ public class BluetoothSdkManager {
 
     //开启远程蓝牙设备扫描
     public boolean startDiscovery(){
+
+        Log.e("lpc","--- startDiscovery()" );
         return mBluetoothAdapter.startDiscovery();
     }
 
@@ -196,21 +198,24 @@ public class BluetoothSdkManager {
             mReceiver = new DiscoveryReceiver();
         }
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         mContext.registerReceiver(mReceiver, intentFilter);
+
+        intentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        mContext.registerReceiver(mReceiver, intentFilter);
+        isRegister = true;
+        mDeviceList.clear();
 
         if (isDiscoverying()){
             cancelDiscovery();
         }
+
         startDiscovery();
 
         if (mDiscoveryDevicesListener != null){
             mDiscoveryDevicesListener.startDiscovery();
         }
 
-        isRegister = true;
     }
 
     //发现蓝牙设备广播
@@ -222,11 +227,13 @@ public class BluetoothSdkManager {
             if (BluetoothDevice.ACTION_FOUND.equals(action)){
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (mDiscoveryDevicesListener != null){
+                    Log.e("lpc >>>", "onReceive --- device.toString: " + device.getName() + ":" + device.getAddress());
                     mDiscoveryDevicesListener.discoveryNew(device);
                 }
                 mDeviceList.add(device);
             }else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
                 if (mDiscoveryDevicesListener != null){
+                    Log.e("lpc >>>", "onReceive --- mDeviceList.size() = " + mDeviceList.size());
                     mDiscoveryDevicesListener.discoveryFinish(mDeviceList);
                 }
             }

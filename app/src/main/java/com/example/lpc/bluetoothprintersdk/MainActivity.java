@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 manager.getBluetoothAdapter().enable();
             }
         }
-
-        manager.setupService();
     }
 
     public void initListener() {
@@ -172,15 +170,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void discoveryNew(BluetoothDevice device) {
                     Toast.makeText(MainActivity.this, "发现新的蓝牙设备...", Toast.LENGTH_SHORT).show();
                     mListDevices.add(device);
-                    mAdapter = new DeviceAdapter(mContext, mListDevices, manager);
-                    mList.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override
                 public void discoveryFinish(List<BluetoothDevice> list) {
+                    Log.e("lpc >>>", "startSearchBT --- discoveryFinish() --- list.size(): " + list.size() );
                     Toast.makeText(MainActivity.this, "搜索完成，共发现 <" + list.size() + ">" + "个蓝牙设备", Toast.LENGTH_SHORT).show();
-                    mAdapter.notifyDataSetChanged();
+                    if (!list.isEmpty()){
+                        mAdapter = new DeviceAdapter(mContext, list, manager);
+                        mList.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
+
                 }
             });
         }

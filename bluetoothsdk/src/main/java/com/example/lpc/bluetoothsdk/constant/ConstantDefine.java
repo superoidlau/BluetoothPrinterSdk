@@ -13,7 +13,6 @@ public class ConstantDefine {
     public static final int CONNECT_STATE_LISTENER = 1;     //侦听连接
     public static final int CONNECT_STATE_CONNECTING = 2;   //正在连接
     public static final int CONNECT_STATE_CONNECTED = 3;    //已经连接
-    public static final int CONNECT_STATE_NULL = -1;        //
 
 
     //Handler的消息类型
