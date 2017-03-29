@@ -2,7 +2,6 @@ package com.example.lpc.bluetoothprintersdk;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -88,16 +87,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onConnectStateChanged(int state) {
                 switch (state) {
                     case ConstantDefine.CONNECT_STATE_NONE:
-                        Log.i("lpc", "  -----> none <----");
+                        Log.i("main", "  -----> none <----");
                         break;
                     case ConstantDefine.CONNECT_STATE_LISTENER:
-                        Log.i("lpc", "  -----> listener <----");
+                        Log.i("main", "  -----> listener <----");
                         break;
                     case ConstantDefine.CONNECT_STATE_CONNECTING:
-                        Log.i("lpc", "  -----> connecting <----");
+                        Log.i("main", "  -----> connecting <----");
                         break;
                     case ConstantDefine.CONNECT_STATE_CONNECTED:
-                        Log.i("lpc", "  -----> connected <----");
+                        Log.i("main", "  -----> connected <----");
                         break;
                 }
             }
@@ -174,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 @Override
                 public void discoveryFinish(List<BluetoothDevice> list) {
-                    Log.e("lpc >>>", "startSearchBT --- discoveryFinish() --- list.size(): " + list.size() );
+                    Log.e("main >>>", "startSearchBT --- discoveryFinish() --- list.size(): " + list.size() );
                     Toast.makeText(MainActivity.this, "搜索完成，共发现 <" + list.size() + ">" + "个蓝牙设备", Toast.LENGTH_SHORT).show();
                     if (!list.isEmpty()){
                         mAdapter = new DeviceAdapter(mContext, list, manager);
@@ -189,8 +188,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //打印测试
     public void printTest() {
-        manager.printText("浙江宇视科技，\n");
-        manager.printText("Uniview Technology. \n");
+        manager.printText("可以正常打印出这句话吗？\n");
+        manager.printText("Hello World.\n");
 
         manager.printImage(markImage());
     }

@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * Description: 接口管理类
- * Created by lpc on 2017/2/14.
+ * Created by haha on 2017/2/14.
  */
 public class BluetoothSdkManager {
 
@@ -82,10 +82,10 @@ public class BluetoothSdkManager {
         return mBluetoothAdapter;
     }
 
-    //开启远程蓝牙设备扫描
+    //开启远程蓝牙设备扫描: 不需要独自调用，在进行搜索回调中已经被调用
     public boolean startDiscovery(){
 
-        Log.e("lpc","--- startDiscovery()" );
+        Log.e("haha","--- startDiscovery()" );
         return mBluetoothAdapter.startDiscovery();
     }
 
@@ -132,7 +132,7 @@ public class BluetoothSdkManager {
         return isServiceRunning;
     }
 
-    //连接蓝牙设备
+    //连接蓝牙设备通过MAC地址
     public void connect(String address) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (mBTService != null){
@@ -170,10 +170,12 @@ public class BluetoothSdkManager {
         return mBluetoothAdapter.getBondedDevices();
     }
 
+    //得到连接成功的设备名称
     public String getConnectDeviceName(){
         return mConnectDeviceName;
     }
 
+    //得到连接成功的设备Mac地址
     public String getConnectDeviceAddress(){
         return mConnectDeviceAddress;
     }
@@ -226,13 +228,13 @@ public class BluetoothSdkManager {
             if (BluetoothDevice.ACTION_FOUND.equals(action)){
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (mDiscoveryDevicesListener != null){
-                    Log.e("lpc >>>", "onReceive --- device.toString: " + device.getName() + ":" + device.getAddress());
+                    Log.e("haha >>>", "onReceive --- device.toString: " + device.getName() + ":" + device.getAddress());
                     mDiscoveryDevicesListener.discoveryNew(device);
                 }
                 mDeviceList.add(device);
             }else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
                 if (mDiscoveryDevicesListener != null){
-                    Log.e("lpc >>>", "onReceive --- mDeviceList.size() = " + mDeviceList.size());
+                    Log.e("haha >>>", "onReceive --- mDeviceList.size() = " + mDeviceList.size());
                     mDiscoveryDevicesListener.discoveryFinish(mDeviceList);
                 }
             }
@@ -311,7 +313,7 @@ public class BluetoothSdkManager {
     //打印图片
     public void printImage(Bitmap bitmap){
         byte[] data = BitmapUtils.bitmapToByte(bitmap, bitmap.getWidth(), 0);
-        Log.i("lpc", "--> printImage() -- data.length = " + data.length);
+        Log.i("haha", "--> printImage() -- data.length = " + data.length);
         write(data);
     }
 
